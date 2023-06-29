@@ -16,6 +16,7 @@ import (
 
 var (
 	mirrorCtx []string
+	finalTags []string
 )
 
 const MaxConcurrent = 5 // 最大并发数
@@ -51,30 +52,40 @@ func main() {
 
 func executeCommand(command string) error {
 
-	tags := listTags(command)
+	// 远程tag
+	remoteTags := listTags(command)
 
-	if tags == nil {
+	if remoteTags == nil {
 		fmt.Println("Empty tags for command:", command)
 		return nil
 	}
 
-	dest, src, _ := ImageContains(tags, "docker.io/cnxyz")
+	_, src, _ := ImageContains(remoteTags, "docker.io/cnxyz")
 
 	// 组装名称
-	// log.Println(dest, src)
+	//log.Println(dest, src)
+	// 获取本地仓库tag 去重
+	srcTags := listTags(src)
+
+	if remoteTags != nil {
+		srcTags.Tags = finalTags
+	}
+
+	log.Println("----finalTags--------", finalTags)
+	log.Println("----remoteTags--------", remoteTags.Tags)
 
 	// 执行命令的逻辑
-	fmt.Println("Executing command:", command)
-	cmd := exec.Command("skopeo", "copy", "--insecure-policy", "--src-tls-verify=false", "--dest-tls-verify=false", "-q", "docker://"+src, "docker://"+dest)
+	//fmt.Println("Executing command:", command)
+	//cmd := exec.Command("skopeo", "copy", "--insecure-policy", "--src-tls-verify=false", "--dest-tls-verify=false", "-q", "docker://"+src, "docker://"+dest)
 
-	log.Printf("CMD:[%s]\n", cmd.Args)
+	//log.Printf("CMD:[%s]\n", cmd.Args)
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err := cmd.Run()
-	if err != nil {
-		return err
-	}
+	//cmd.Stdout = os.Stdout
+	//cmd.Stderr = os.Stderr
+	//err := cmd.Run()
+	//if err != nil {
+	//	return err
+	//}
 
 	// 执行命令的逻辑
 	//fmt.Println("Executing command:", command)
@@ -98,12 +109,12 @@ func listTags(image string) *list {
 	var out bytes.Buffer
 
 	cmd := exec.Command("skopeo", "list-tags", "docker://"+image)
-	//log.Println("Cmd", cmd.Args)
+	log.Println("Cmd", cmd.Args)
 	cmd.Stdout = &out
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
 	if err != nil {
-		return nil
+		log.Fatal(err)
 	}
 
 	var l list
