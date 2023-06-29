@@ -22,7 +22,7 @@ var (
 const MaxConcurrent = 5 // 最大并发数
 
 func main() {
-	body := httpclient("https://raw.githubusercontent.com/DaoCloud/public-image-mirror/main/mirror.txt")
+	body := httpclient("https://raw.githubusercontent.com/cnsync/image-sync/main/mirrors.txt")
 
 	SplitMirrors(body)
 
@@ -67,7 +67,7 @@ func executeCommand(command string) error {
 	// 获取本地仓库tag 去重
 	srcTags := listTags(src)
 
-	if remoteTags != nil {
+	if srcTags != nil {
 		srcTags.Tags = finalTags
 	}
 
@@ -108,22 +108,27 @@ type list struct {
 func listTags(image string) *list {
 	var out bytes.Buffer
 
-	cmd := exec.Command("skopeo", "list-tags", "docker://"+image)
-	log.Println("Cmd", cmd.Args)
-	cmd.Stdout = &out
-	cmd.Stderr = os.Stderr
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal(err)
+	if image != "" {
+		cmd := exec.Command("skopeo", "list-tags", "docker://"+image)
+		log.Println("Cmd", cmd.Args)
+		cmd.Stdout = &out
+		cmd.Stderr = os.Stderr
+		err := cmd.Run()
+		if err != nil {
+			log.Println(err)
+			return nil
+		}
+
+		var l list
+		err = json.Unmarshal(out.Bytes(), &l)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		return &l
 	}
 
-	var l list
-	err = json.Unmarshal(out.Bytes(), &l)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return &l
+	return nil
 }
 
 // ImageContains 镜像名称处理
