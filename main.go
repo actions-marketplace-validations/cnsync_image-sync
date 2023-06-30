@@ -38,7 +38,6 @@ func ExecCommand(mirrorCtx []string) {
 		srcRepo, srcTags := listTags(cmd)
 		if srcRepo == "" {
 			log.Println("Empty tags for command:", cmd)
-			continue
 		}
 
 		srcRe, destRe := ImageContains(srcRepo, "docker.io/cnxyz")
@@ -139,18 +138,18 @@ func httpclient(url string) string {
 	client := &http.Client{Transport: tr}
 	resp, err := client.Get(url)
 	if err != nil {
-		log.Println("error:", err)
+		log.Println("error142:", err)
 		return ""
 	}
 	defer func() {
 		err := resp.Body.Close()
 		if err != nil {
-			log.Println("error:", err)
+			log.Println("error148:", err)
 		}
 	}()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Println("error:", err)
+		log.Println("error153:", err)
 		return ""
 	}
 	return string(body)
