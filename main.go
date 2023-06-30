@@ -48,7 +48,7 @@ func ExecCommand(mirrorCtx []string) {
 				return FinalTags[i] < FinalTags[j]
 			})
 
-			for _, tag := range FinalTags {
+			for _, tag := range TagsContains(FinalTags) {
 				copyTags(srcRe, destRe, tag)
 			}
 		}
@@ -58,12 +58,26 @@ func ExecCommand(mirrorCtx []string) {
 			return srcTags[i] < srcTags[j]
 		})
 
-		for _, tag := range srcTags {
+		log.Println("-----61-------", srcTags)
+		for _, tag := range TagsContains(srcTags) {
+
 			copyTags(srcRe, destRe, tag)
 		}
 
 	}
+}
 
+func TagsContains(strs []string) []string {
+
+	var a []string
+
+	for _, str := range strs {
+		if !strings.Contains(str, ".sig") {
+			a = append(a, str)
+		}
+	}
+
+	return a
 }
 
 func listTags(image string) (string, []string) {
