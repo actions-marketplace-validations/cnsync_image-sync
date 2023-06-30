@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Image Sync
-        uses: cnsync/image-sync@v1.0.1
+        uses: cnsync/image-sync@v1.0.2
         env:
           DEST_REPO: "swr.cn-east-3.myhuaweicloud.com"
           HUB: "huawei"
