@@ -5,11 +5,14 @@ before:
     - go mod tidy
 
 builds:
-  - env: [CGO_ENABLED=0]
+  - id: autobrr
+    env:
+      - CGO_ENABLED=0
     goos:
       - linux
       - windows
       - darwin
+      - freebsd
     goarch:
       - amd64
 
@@ -17,8 +20,14 @@ checksum:
   name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
 
 archives:
-  replacements:
-    amd64: x86_64
-  format_overrides:
-    - goos: windows
-      format: zip
+  - id: autobrr
+    builds:
+      - autobrr
+      - autobrrctl
+    files:
+      - none*
+    replacements:
+      amd64: x86_64
+    format_overrides:
+      - goos: windows
+        format: zip
