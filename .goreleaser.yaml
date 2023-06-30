@@ -23,7 +23,6 @@ archives:
   - id: autobrr
     builds:
       - autobrr
-      - autobrrctl
     files:
       - none*
     replacements:
