@@ -41,10 +41,12 @@ func ExecCommand(mirrorCtx []string) {
 
 		_, destTag := listTags(destRe)
 
-		log.Println("-------destTag-----", destTag)
+		//log.Println("-------destTag-----", destTag)
 
 		if destTag != nil {
 			FinalTags = removeDuplicates(srcTags, destTag)
+
+			//log.Println("-------FinalTags-----", FinalTags)
 
 			// 使用 sort.Slice 对数组进行排序
 			sort.Slice(FinalTags, func(i, j int) bool {
@@ -54,18 +56,18 @@ func ExecCommand(mirrorCtx []string) {
 			for _, tag := range TagsContains(FinalTags) {
 				copyTags(srcRe, destRe, tag)
 			}
+		} else {
+			// 使用 sort.Slice 对数组进行排序
+			sort.Slice(srcTags, func(i, j int) bool {
+				return srcTags[i] < srcTags[j]
+			})
+
+			//log.Println("-----srcTags-------", srcTags)
+			for _, tag := range TagsContains(srcTags) {
+				copyTags(srcRe, destRe, tag)
+
+			}
 		}
-
-		// 使用 sort.Slice 对数组进行排序
-		sort.Slice(srcTags, func(i, j int) bool {
-			return srcTags[i] < srcTags[j]
-		})
-
-		log.Println("-----61-------", srcTags)
-		for _, tag := range TagsContains(srcTags) {
-			copyTags(srcRe, destRe, tag)
-		}
-
 	}
 }
 
