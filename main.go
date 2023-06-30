@@ -87,6 +87,7 @@ func listTags(image string) (string, []string) {
 		err := cmd.Run()
 		if err != nil {
 			log.Println("exec.Command 命令执行错误: ", err)
+			return "", nil
 		}
 
 		var l list

@@ -25,5 +25,5 @@ jobs:
         uses: cnsync/image-sync@v0.0.1
         env:
           DEST_REPO: "docker.io"
-          DEST_TRANSPORT_USER: "${{ secrets.DEST_TRANSPORT_USER }}"
+          DEST_TRANSPORT_USER: "cnxyz"
           DEST_TRANSPORT_PASSWORD: "${{ secrets.DEST_TRANSPORT_PASSWORD }}"
