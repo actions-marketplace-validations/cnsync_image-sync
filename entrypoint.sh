@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+export HUB=${HUB}
 export DEST_REPO=${DEST_REPO}
 export DEST_TRANSPORT_USER=${DEST_TRANSPORT_USER:-"docker"}
 export DEST_TRANSPORT_PASSWORD=${DEST_TRANSPORT_PASSWORD:-"docker"}

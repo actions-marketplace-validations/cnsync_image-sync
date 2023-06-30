@@ -1,0 +1,30 @@
+name: docker-image-sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'run action reason'
+        required: false
+        type: string
+        default: 'manually test'
+  schedule:
+    - cron: '* */8 * * *'
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  google-containers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Image Sync
+        uses: cnsync/image-sync@v1.0.0
+        env:
+          DEST_REPO: "docker.io"
+          HUB: "docker"
+          DEST_TRANSPORT_USER: "cnxyz"
+          DEST_TRANSPORT_PASSWORD: "${{ secrets.DEST_TRANSPORT_PASSWORD }}"

@@ -20,15 +20,26 @@ type list struct {
 
 var FinalTags []string
 
+var HUB string
+
+func init() {
+	HUB = os.Getenv("HUB")
+}
+
 func main() {
 	body := httpclient("https://raw.githubusercontent.com/cnsync/image-sync/main/mirrors.txt")
 
 	mirrorCtx := strings.Split(body, "\n")
 
-	ExecCommand(mirrorCtx)
+	if HUB == "huawei" {
+		ExecCommand(mirrorCtx, "swr.cn-east-3.myhuaweicloud.com/cnxyz")
+	} else {
+		ExecCommand(mirrorCtx, "docker.io/cnxyz")
+	}
+
 }
 
-func ExecCommand(mirrorCtx []string) {
+func ExecCommand(mirrorCtx []string, hub string) {
 
 	for _, cmd := range mirrorCtx {
 
@@ -37,7 +48,7 @@ func ExecCommand(mirrorCtx []string) {
 			log.Println("Empty tags for command:", cmd)
 		}
 
-		srcRe, destRe := ImageContains(srcRepo, "docker.io/cnxyz")
+		srcRe, destRe := ImageContains(srcRepo, hub)
 
 		_, destTag := listTags(destRe)
 		//log.Println("-------destTag-----", destTag)

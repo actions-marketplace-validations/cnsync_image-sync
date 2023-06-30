@@ -1,4 +1,4 @@
-name: image-sync
+name: huawei-image-sync
 
 on:
   workflow_dispatch:
@@ -24,6 +24,7 @@ jobs:
       - name: Image Sync
         uses: cnsync/image-sync@v1.0.0
         env:
-          DEST_REPO: "docker.io"
-          DEST_TRANSPORT_USER: "cnxyz"
-          DEST_TRANSPORT_PASSWORD: "${{ secrets.DEST_TRANSPORT_PASSWORD }}"
+          DEST_REPO: "swr.cn-east-3.myhuaweicloud.com"
+          HUB: "huawei"
+          DEST_TRANSPORT_USER: "${{ secrets.HUAWEI_USER }}"
+          DEST_TRANSPORT_PASSWORD: "${{ secrets.HUAWEI_PASSWORD }}"

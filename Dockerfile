@@ -6,8 +6,8 @@ ENV LANGUAGE en_US.UTF-8
 
 RUN apt update && \
     apt install -y skopeo wget &&\
-    wget -O image-sync_1.0.0_linux_amd64.tar.gz https://github.com/cnsync/image-sync/releases/download/v1.0.0/image-sync_1.0.0_linux_amd64.tar.gz && \
-    tar -zxvf image-sync_1.0.0_linux_amd64.tar.gz -C /usr/bin/ &&\
+    wget -O image-sync_1.0.1_linux_amd64.tar.gz https://github.com/cnsync/image-sync/releases/download/v1.0.1/image-sync_1.0.1_linux_amd64.tar.gz && \
+    tar -zxvf image-sync_1.0.1_linux_amd64.tar.gz -C /usr/bin/ &&\
     chmod +x /usr/bin/image-sync
 
 ADD entrypoint.sh /
