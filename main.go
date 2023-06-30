@@ -11,7 +11,6 @@ import (
 	"os/exec"
 	"sort"
 	"strings"
-	"sync"
 )
 
 type list struct {
@@ -30,9 +29,6 @@ func main() {
 }
 
 func ExecCommand(mirrorCtx []string) {
-	var wg sync.WaitGroup
-	tagCh := make(chan string)
-	concurrentLimit := make(chan struct{}, 3) // 控制并发数量
 
 	for _, cmd := range mirrorCtx {
 		srcRepo, srcTags := listTags(cmd)
@@ -52,17 +48,8 @@ func ExecCommand(mirrorCtx []string) {
 				return FinalTags[i] < FinalTags[j]
 			})
 
-			wg.Add(len(FinalTags))
 			for _, tag := range FinalTags {
-				concurrentLimit <- struct{}{} // 获取并发控制信号量
-				go func(tag string) {
-					defer func() {
-						<-concurrentLimit // 释放并发控制信号量
-						wg.Done()
-					}()
-					copyTags(srcRe, destRe, tag)
-					tagCh <- tag
-				}(tag)
+				copyTags(srcRe, destRe, tag)
 			}
 		}
 
@@ -71,29 +58,12 @@ func ExecCommand(mirrorCtx []string) {
 			return srcTags[i] < srcTags[j]
 		})
 
-		wg.Add(len(srcTags))
 		for _, tag := range srcTags {
-			concurrentLimit <- struct{}{} // 获取并发控制信号量
-			go func(tag string) {
-				defer func() {
-					<-concurrentLimit // 释放并发控制信号量
-					wg.Done()
-				}()
-				copyTags(srcRe, destRe, tag)
-				tagCh <- tag
-			}(tag)
+			copyTags(srcRe, destRe, tag)
 		}
 
 	}
 
-	go func() {
-		wg.Wait()
-		close(tagCh)
-	}()
-
-	for tag := range tagCh {
-		log.Printf("Tag copied: %s\n", tag)
-	}
 }
 
 func listTags(image string) (string, []string) {
