@@ -27,13 +27,14 @@ func init() {
 }
 
 func main() {
-	body := httpclient("https://raw.githubusercontent.com/cnsync/image-sync/main/mirrors.txt")
-
-	mirrorCtx := strings.Split(body, "\n")
 
 	if HUB == "huawei" {
+		body := httpclient("https://raw.githubusercontent.com/cnsync/image-sync/main/mirrors-docker.txt")
+		mirrorCtx := strings.Split(body, "\n")
 		ExecCommand(mirrorCtx, "swr.cn-east-3.myhuaweicloud.com/cnxyz")
 	} else {
+		body := httpclient("https://raw.githubusercontent.com/cnsync/image-sync/main/mirrors-huawei.txt")
+		mirrorCtx := strings.Split(body, "\n")
 		ExecCommand(mirrorCtx, "docker.io/cnxyz")
 	}
 
