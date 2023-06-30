@@ -31,6 +31,7 @@ func main() {
 func ExecCommand(mirrorCtx []string) {
 
 	for _, cmd := range mirrorCtx {
+
 		srcRepo, srcTags := listTags(cmd)
 		if srcRepo == "" {
 			log.Println("Empty tags for command:", cmd)
@@ -39,6 +40,8 @@ func ExecCommand(mirrorCtx []string) {
 		srcRe, destRe := ImageContains(srcRepo, "docker.io/cnxyz")
 
 		_, destTag := listTags(destRe)
+
+		log.Println("-------destTag-----", destTag)
 
 		if destTag != nil {
 			FinalTags = removeDuplicates(srcTags, destTag)
@@ -60,7 +63,6 @@ func ExecCommand(mirrorCtx []string) {
 
 		log.Println("-----61-------", srcTags)
 		for _, tag := range TagsContains(srcTags) {
-
 			copyTags(srcRe, destRe, tag)
 		}
 
