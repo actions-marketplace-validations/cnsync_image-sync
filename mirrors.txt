@@ -1,3 +1,2 @@
-quay.io/coreos/etcd
-quay.io/calico/cni
-quay.io/calico/ctl
+registry.k8s.io/ingress-nginx/controller
+registry.k8s.io/ingress-nginx/kube-webhook-certgen
