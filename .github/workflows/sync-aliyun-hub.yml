@@ -1,0 +1,30 @@
+name: docker-image-sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'run action reason'
+        required: false
+        type: string
+        default: 'manually test'
+  schedule:
+    - cron: '* */8 * * *'
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  google-containers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Image Sync
+        uses: cnsync/image-sync@v1.0.1
+        env:
+          DEST_REPO: "registry.cn-hangzhou.aliyuncs.com"
+          HUB: "aliyun"
+          DEST_TRANSPORT_USER: "${{ secrets.ALIYUN_USER }}"
+          DEST_TRANSPORT_PASSWORD: "${{ secrets.ALIYUN_PASSWORD }}"
