@@ -40,7 +40,6 @@ func ExecCommand(mirrorCtx []string) {
 		srcRe, destRe := ImageContains(srcRepo, "docker.io/cnxyz")
 
 		_, destTag := listTags(destRe)
-
 		//log.Println("-------destTag-----", destTag)
 
 		if destTag != nil {
