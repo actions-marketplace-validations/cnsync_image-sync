@@ -1,0 +1,10 @@
+name: 'Image Sync'
+description: 'Images Sync'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+
+branding:
+  color: 'blue'
+  icon: 'repeat'
