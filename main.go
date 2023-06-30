@@ -32,7 +32,7 @@ func main() {
 func ExecCommand(mirrorCtx []string) {
 	var wg sync.WaitGroup
 	tagCh := make(chan string)
-	concurrentLimit := make(chan struct{}, 10) // 控制并发数量
+	concurrentLimit := make(chan struct{}, 3) // 控制并发数量
 
 	for _, cmd := range mirrorCtx {
 		srcRepo, srcTags := listTags(cmd)
