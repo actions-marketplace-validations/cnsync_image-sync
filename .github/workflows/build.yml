@@ -22,7 +22,7 @@ jobs:
         # 使用 goreleaser 进行生成多平台代码并且上传到github release进行发布
 
       - name: Create release on GitHub
-        uses: goreleaser/goreleaser-action@v3
+        uses: docker://goreleaser/goreleaser:latest
         if: success() && startsWith(github.ref, 'refs/tags/')
         with:
           version: latest
