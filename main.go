@@ -19,6 +19,8 @@ type list struct {
 	Tags       []string `json:"Tags"`
 }
 
+var FinalTags []string
+
 func main() {
 	body := httpclient("https://raw.githubusercontent.com/cnsync/image-sync/main/mirrors.txt")
 
@@ -44,15 +46,15 @@ func ExecCommand(mirrorCtx []string) {
 		_, destTag := listTags(destRe)
 
 		if destTag != nil {
-			finalTags := removeDuplicates(srcTags, destTag)
+			FinalTags = removeDuplicates(srcTags, destTag)
 
 			// 使用 sort.Slice 对数组进行排序
-			sort.Slice(finalTags, func(i, j int) bool {
-				return finalTags[i] < finalTags[j]
+			sort.Slice(FinalTags, func(i, j int) bool {
+				return FinalTags[i] < FinalTags[j]
 			})
 
-			wg.Add(len(finalTags))
-			for _, tag := range finalTags {
+			wg.Add(len(FinalTags))
+			for _, tag := range FinalTags {
 				concurrentLimit <- struct{}{} // 获取并发控制信号量
 				go func(tag string) {
 					defer func() {
@@ -64,6 +66,25 @@ func ExecCommand(mirrorCtx []string) {
 				}(tag)
 			}
 		}
+
+		// 使用 sort.Slice 对数组进行排序
+		sort.Slice(srcTags, func(i, j int) bool {
+			return srcTags[i] < srcTags[j]
+		})
+
+		wg.Add(len(srcTags))
+		for _, tag := range srcTags {
+			concurrentLimit <- struct{}{} // 获取并发控制信号量
+			go func(tag string) {
+				defer func() {
+					<-concurrentLimit // 释放并发控制信号量
+					wg.Done()
+				}()
+				copyTags(srcRe, destRe, tag)
+				tagCh <- tag
+			}(tag)
+		}
+
 	}
 
 	go func() {
@@ -87,7 +108,6 @@ func listTags(image string) (string, []string) {
 		err := cmd.Run()
 		if err != nil {
 			log.Println("exec.Command 命令执行错误: ", err)
-			return "", nil
 		}
 
 		var l list
