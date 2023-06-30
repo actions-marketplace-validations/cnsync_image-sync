@@ -1,4 +1,4 @@
-project_name: imagesync
+project_name: image-sync
 builds:
   - env: [CGO_ENABLED=0]
     goos:
