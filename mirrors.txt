@@ -1,1 +1,1 @@
-registry.k8s.io/etcd
+quay.io/coreos/etcd
