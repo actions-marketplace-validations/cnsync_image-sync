@@ -1,1 +1,3 @@
 quay.io/coreos/etcd
+quay.io/calico/cni
+quay.io/calico/ctl
