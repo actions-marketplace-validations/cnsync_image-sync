@@ -47,38 +47,31 @@ func ExecCommand(mirrorCtx []string) {
 
 			//log.Println("-------FinalTags-----", FinalTags)
 
-			// 使用 sort.Slice 对数组进行排序
-			sort.Slice(FinalTags, func(i, j int) bool {
-				return FinalTags[i] < FinalTags[j]
-			})
-
 			for _, tag := range TagsContains(FinalTags) {
 				copyTags(srcRe, destRe, tag)
 			}
 		} else {
-			// 使用 sort.Slice 对数组进行排序
-			sort.Slice(srcTags, func(i, j int) bool {
-				return srcTags[i] < srcTags[j]
-			})
 
 			//log.Println("-----srcTags-------", srcTags)
 			for _, tag := range TagsContains(srcTags) {
 				copyTags(srcRe, destRe, tag)
-
 			}
 		}
 	}
 }
 
 func TagsContains(strs []string) []string {
-
 	var a []string
-
 	for _, str := range strs {
 		if !strings.Contains(str, ".sig") {
 			a = append(a, str)
 		}
 	}
+
+	// 排序
+	sort.Slice(a, func(i, j int) bool {
+		return a[i] < a[j]
+	})
 
 	return a
 }
@@ -168,7 +161,7 @@ func copyTags(srcRe, destRe, tag string) {
 		"-q",
 		"docker://"+srcRe+":"+tag,
 		"docker://"+destRe+":"+tag)
-	log.Printf("CMD:[%s]\n", cmd.Args)
+	log.Println("Cmd", cmd.Args)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
