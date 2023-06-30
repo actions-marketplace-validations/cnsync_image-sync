@@ -1,4 +1,4 @@
-name: aliyun-image-sync
+name: docker-image-sync
 
 on:
   workflow_dispatch:
