@@ -10,3 +10,15 @@ builds:
 
 checksum:
   name_template: 'checksums.txt'
+
+archives:
+  - replacements:
+      linux: Linux
+      windows: Windows
+      darwin: MacOs
+      amd64: x86_64
+    format_overrides:
+      - goos: windows
+        format: zip
+    files: # 添加到压缩包内的文件列表
+      - README.md
