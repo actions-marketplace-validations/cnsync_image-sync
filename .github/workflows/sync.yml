@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Image Sync
-        uses: cnsync/image-sync@v0.0.1
+        uses: cnsync/image-sync@v1.0.0
         env:
           DEST_REPO: "docker.io"
           DEST_TRANSPORT_USER: "cnxyz"
